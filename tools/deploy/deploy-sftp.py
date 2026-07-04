@@ -145,7 +145,7 @@ def resolve_project_remote_path(config, config_path, target, project_id, deploy_
     if not project_id:
         return None
     project_map = read_project_map(config, config_path)
-    selected_mode = deploy_mode or config.get("deployMode") or project_map.get("defaultMode") or "legacy"
+    selected_mode = resolve_deploy_mode(config, config_path, deploy_mode)
     project = next((item for item in project_map.get("projects", []) if item.get("id") == project_id), None)
     if not project:
         known = ", ".join(item.get("id", "") for item in project_map.get("projects", []))
@@ -157,6 +157,50 @@ def resolve_project_remote_path(config, config_path, target, project_id, deploy_
             f"Project '{project_id}' has no '{selected_mode}' deploy path. Status: {project.get('status', '')}."
         )
     return rewrite_remote_path(remote_path, target)
+
+
+def resolve_deploy_mode(config, config_path, deploy_mode):
+    if deploy_mode:
+        return deploy_mode
+    if config.get("deployMode"):
+        return config["deployMode"]
+    project_map = read_project_map(config, config_path)
+    return project_map.get("defaultMode") or "legacy"
+
+
+def prepare_artifact_root(upload_root, project_id, deploy_mode):
+    if not project_id or deploy_mode != "subdomain":
+        return upload_root, None
+
+    legacy_prefix = f"/{project_id.strip('/')}/"
+    rewrite_suffixes = {".html", ".htm", ".js", ".mjs", ".css", ".json", ".webmanifest", ".svg"}
+    matching_files = []
+    for path in upload_root.rglob("*"):
+        if not path.is_file() or path.suffix.lower() not in rewrite_suffixes:
+            continue
+        try:
+            if legacy_prefix in path.read_text(encoding="utf-8"):
+                matching_files.append(path)
+        except UnicodeDecodeError:
+            continue
+
+    if not matching_files:
+        return upload_root, None
+
+    prepared_root = Path(tempfile.mkdtemp(prefix="sub-domen-hub-artifact-"))
+    shutil.copytree(upload_root, prepared_root, dirs_exist_ok=True)
+    for path in prepared_root.rglob("*"):
+        if not path.is_file() or path.suffix.lower() not in rewrite_suffixes:
+            continue
+        try:
+            content = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+        if legacy_prefix in content:
+            path.write_text(content.replace(legacy_prefix, "/"), encoding="utf-8")
+
+    print(f"Rewrote legacy base path {legacy_prefix} to / for subdomain deploy.")
+    return prepared_root, prepared_root
 
 
 def mkdir_p(sftp, remote_dir):
@@ -180,7 +224,8 @@ def deploy(config, config_path, args):
     ref = args.ref or source_config.get("ref")
     build_command = args.build_command if args.build_command is not None else build_config.get("command")
     output_path = args.output_path or build_config.get("outputPath") or "."
-    project_remote_path = resolve_project_remote_path(config, config_path, target, args.project, args.deploy_mode)
+    selected_deploy_mode = resolve_deploy_mode(config, config_path, args.deploy_mode)
+    project_remote_path = resolve_project_remote_path(config, config_path, target, args.project, selected_deploy_mode)
     remote_path = args.remote_path or project_remote_path or target.get("remotePath")
     exclude = config.get("exclude") or []
 
@@ -196,6 +241,7 @@ def deploy(config, config_path, args):
         upload_root = resolve_path(output_path, workspace)
         if not upload_root.is_dir():
             raise RuntimeError(f"Build output folder does not exist: {upload_root}")
+        upload_root, prepared_root = prepare_artifact_root(upload_root, args.project, selected_deploy_mode)
         files = collect_files(upload_root, exclude)
         if not files:
             raise RuntimeError(f"No files selected for upload from {upload_root}.")
@@ -256,6 +302,8 @@ def deploy(config, config_path, args):
             client.close()
         print("Deploy completed.")
     finally:
+        if "prepared_root" in locals() and prepared_root and prepared_root.exists():
+            shutil.rmtree(prepared_root, ignore_errors=True)
         if temporary and workspace and workspace.exists():
             shutil.rmtree(workspace, ignore_errors=True)
 

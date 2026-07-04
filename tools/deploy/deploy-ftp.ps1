@@ -179,6 +179,81 @@ function Resolve-ProjectRemotePath {
     return $path
 }
 
+function Resolve-DeployMode {
+    param(
+        [object]$Config,
+        [string]$ConfigPath,
+        [string]$DeployMode
+    )
+
+    if (-not [string]::IsNullOrWhiteSpace($DeployMode)) {
+        return $DeployMode
+    }
+
+    $configuredMode = Get-OptionalProperty -Object $Config -Name "deployMode"
+    if (-not [string]::IsNullOrWhiteSpace($configuredMode)) {
+        return $configuredMode
+    }
+
+    $projectMap = Read-ProjectMap -Config $Config -ConfigPath $ConfigPath
+    $defaultMode = Get-OptionalProperty -Object $projectMap -Name "defaultMode"
+    if (-not [string]::IsNullOrWhiteSpace($defaultMode)) {
+        return $defaultMode
+    }
+
+    return "legacy"
+}
+
+function New-PreparedArtifactRoot {
+    param(
+        [string]$ArtifactPath,
+        [string]$Project,
+        [string]$DeployMode
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Project) -or $DeployMode -ne "subdomain") {
+        return [pscustomobject]@{
+            Path = $ArtifactPath
+            Temporary = $false
+        }
+    }
+
+    $legacyPrefix = "/" + $Project.Trim("/") + "/"
+    $rewriteExtensions = @(".html", ".htm", ".js", ".mjs", ".css", ".json", ".webmanifest", ".svg")
+    $matches = @(Get-ChildItem -LiteralPath $ArtifactPath -Recurse -File -Force | Where-Object {
+        $_.Extension.ToLowerInvariant() -in $rewriteExtensions -and
+        (Select-String -LiteralPath $_.FullName -SimpleMatch $legacyPrefix -Quiet)
+    })
+
+    if ($matches.Count -eq 0) {
+        return [pscustomobject]@{
+            Path = $ArtifactPath
+            Temporary = $false
+        }
+    }
+
+    $preparedRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("sub-domen-hub-artifact-" + [Guid]::NewGuid().ToString("N"))
+    Copy-Item -LiteralPath $ArtifactPath -Destination $preparedRoot -Recurse -Force
+
+    foreach ($file in Get-ChildItem -LiteralPath $preparedRoot -Recurse -File -Force) {
+        if ($file.Extension.ToLowerInvariant() -notin $rewriteExtensions) {
+            continue
+        }
+
+        $content = Get-Content -LiteralPath $file.FullName -Raw -Encoding UTF8
+        if ($content.Contains($legacyPrefix)) {
+            $content = $content.Replace($legacyPrefix, "/")
+            [System.IO.File]::WriteAllText($file.FullName, $content, [System.Text.UTF8Encoding]::new($false))
+        }
+    }
+
+    Write-Host "Rewrote legacy base path $legacyPrefix to / for subdomain deploy."
+    return [pscustomobject]@{
+        Path = $preparedRoot
+        Temporary = $true
+    }
+}
+
 function Invoke-CheckedCommand {
     param(
         [string]$Command,
@@ -352,6 +427,8 @@ function Invoke-FtpRequest {
     $request.UseBinary = $true
     $request.UsePassive = $true
     $request.EnableSsl = $EnableSsl
+    $request.Timeout = 180000
+    $request.ReadWriteTimeout = 180000
 
     if ($UploadFile) {
         $fileInfo = Get-Item -LiteralPath $UploadFile
@@ -480,7 +557,8 @@ if ($protocol -notin @("ftp", "ftps")) {
 $hostName = Get-ConfigValue -Object $targetConfig -Name "host" -EnvNameProperty "hostEnv" -Label "FTP host" -Required
 $username = Get-ConfigValue -Object $targetConfig -Name "username" -EnvNameProperty "usernameEnv" -Label "FTP username" -Required
 $password = Get-ConfigValue -Object $targetConfig -Name "password" -EnvNameProperty "passwordEnv" -Label "FTP password" -Required
-$projectRemotePath = Resolve-ProjectRemotePath -Config $config -ConfigPath $ConfigPath -Project $Project -DeployMode $DeployMode
+$effectiveDeployMode = Resolve-DeployMode -Config $config -ConfigPath $ConfigPath -DeployMode $DeployMode
+$projectRemotePath = Resolve-ProjectRemotePath -Config $config -ConfigPath $ConfigPath -Project $Project -DeployMode $effectiveDeployMode
 $effectiveRemotePath = if (-not [string]::IsNullOrWhiteSpace($RemotePath)) { $RemotePath } elseif (-not [string]::IsNullOrWhiteSpace($projectRemotePath)) { $projectRemotePath } else { Get-OptionalProperty -Object $targetConfig -Name "remotePath" }
 if ([string]::IsNullOrWhiteSpace($effectiveRemotePath)) {
     throw "Remote path is required. Set target.remotePath or pass -RemotePath."
@@ -497,6 +575,7 @@ if ($configuredExclude) {
 }
 
 $workspace = $null
+$preparedArtifact = $null
 try {
     $workspace = New-SourceWorkspace -SourcePath $effectiveSourcePath -GitUrl $effectiveGitUrl -Ref $effectiveRef
 
@@ -509,14 +588,16 @@ try {
         throw "Build output folder does not exist: $artifactPath"
     }
 
-    $files = @(Get-UploadFiles -Root $artifactPath -ExcludePatterns $excludePatterns)
+    $preparedArtifact = New-PreparedArtifactRoot -ArtifactPath $artifactPath -Project $Project -DeployMode $effectiveDeployMode
+
+    $files = @(Get-UploadFiles -Root $preparedArtifact.Path -ExcludePatterns $excludePatterns)
     if ($files.Count -eq 0) {
-        throw "No files selected for upload from $artifactPath."
+        throw "No files selected for upload from $($preparedArtifact.Path)."
     }
 
     $totalBytes = ($files | Measure-Object -Property Length -Sum).Sum
     Write-Host "Deploy source: $($workspace.Path)"
-    Write-Host "Upload root: $artifactPath"
+    Write-Host "Upload root: $($preparedArtifact.Path)"
     Write-Host "Remote path: $effectiveRemotePath"
     Write-Host "Selected files: $($files.Count), bytes: $totalBytes"
 
@@ -530,6 +611,9 @@ try {
     }
 }
 finally {
+    if ($preparedArtifact -and $preparedArtifact.Temporary -and (Test-Path -LiteralPath $preparedArtifact.Path)) {
+        Remove-Item -LiteralPath $preparedArtifact.Path -Recurse -Force -ErrorAction SilentlyContinue
+    }
     if ($workspace -and $workspace.Temporary -and (Test-Path -LiteralPath $workspace.Path)) {
         Remove-Item -LiteralPath $workspace.Path -Recurse -Force -ErrorAction SilentlyContinue
     }
