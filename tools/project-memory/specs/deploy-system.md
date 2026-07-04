@@ -11,17 +11,27 @@ to shared hosting.
 ## Current Contract
 
 - Deploy configuration lives under `tools/deploy/`.
-- `ftp.local.example.json` is safe to commit and stores only environment
-  variable names for credentials.
+- `sftp.local.example.json` and `ftp.local.example.json` are safe to commit and
+  store only environment variable names for credentials.
 - `ftp.local.json` is ignored and may hold local deploy choices.
+- `sftp.local.json` is ignored and may hold local deploy choices.
 - Passwords must be supplied through environment variables or another explicit
   secret mechanism, not committed documentation.
+- `deploy.ps1` is the single command entrypoint for `gi ftp`; it selects the
+  local SFTP or FTP config and forwards source, git, build, project, and target
+  arguments.
+- `deploy-sftp.ps1` is the preferred REG.RU upload path and uses Python
+  `paramiko`. Install it outside the repository with
+  `python -m pip install --user paramiko` when missing.
 - `deploy-ftp.ps1` supports FTP and FTPS upload.
 - The deploy operation is additive/overwrite-only: it creates directories and
   uploads files, but does not delete remote files.
 - The source may be a local folder or a git repository plus optional ref.
 - The build command is optional and runs before file selection.
 - The upload root is `build.outputPath` or an explicit `-OutputPath`.
+- For this REG.RU account, SFTP uses real filesystem paths under the hosting
+  account. Keep the exact private path in ignored `sftp.local.json`; ISPmanager
+  and hosting maps may still use `/www/...` shorthand.
 - Project deploy targets are mapped in `tools/deploy/hosting-projects.json`.
 - `legacy` mode uploads to folders under `/www/unity-constructor.site`.
 - `subdomain` mode uploads to separate roots under
@@ -47,7 +57,5 @@ to shared hosting.
 
 ## Gaps
 
-- SFTP is not implemented yet. Add it as a separate adapter after deciding
-  whether the hosting account will use SSH keys or a trusted local client.
 - Remote cleanup/atomic releases are not implemented. They require explicit
   hosting folder and rollback rules before use.

@@ -3,25 +3,27 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Unity Constructor Hub</title>
+    <title>Когника Hub</title>
     <meta
       name="description"
-      content="Unity Constructor Hub: карта проектов, старые адреса и рабочие поддомены."
+      content="Когника Hub: рабочие проекты, поддомены и старые адреса unity-constructor.site."
     />
     <style>
       :root {
         color-scheme: light;
-        --bg: #f6f7f4;
-        --ink: #17201c;
-        --muted: #5d6861;
-        --line: #d8ded7;
+        --charcoal: #333335;
+        --charcoal-2: #28282a;
+        --ink: #242424;
+        --muted: #6f6f72;
+        --muted-dark: #d7d7d9;
+        --paper: #f4f3f0;
         --panel: #ffffff;
-        --soft: #e8efe8;
-        --blue: #2458c8;
-        --green: #27785d;
-        --gold: #9b6a1d;
-        --danger: #9c3a2e;
-        --shadow: 0 18px 48px rgba(23, 32, 28, 0.1);
+        --line: #dedbd4;
+        --line-dark: rgba(255, 255, 255, 0.14);
+        --gold: #d1ae55;
+        --gold-soft: #f1e4bd;
+        --green: #20bf62;
+        --shadow: 0 22px 56px rgba(32, 32, 34, 0.16);
       }
 
       * {
@@ -30,7 +32,7 @@
 
       body {
         margin: 0;
-        background: var(--bg);
+        background: var(--paper);
         color: var(--ink);
         font-family:
           Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
@@ -49,46 +51,51 @@
       }
 
       .topbar {
-        border-bottom: 1px solid var(--line);
-        background: rgba(246, 247, 244, 0.92);
-        backdrop-filter: blur(14px);
+        background: rgba(51, 51, 53, 0.94);
+        border-bottom: 1px solid var(--line-dark);
+        color: #f6f6f6;
         position: sticky;
         top: 0;
         z-index: 5;
+        backdrop-filter: blur(16px);
       }
 
       .topbar-inner,
       main,
       footer {
-        width: min(1160px, calc(100% - 32px));
+        width: min(1180px, calc(100% - 32px));
         margin: 0 auto;
       }
 
       .topbar-inner {
-        min-height: 68px;
+        min-height: 74px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 18px;
+        gap: 20px;
       }
 
       .brand {
-        display: flex;
+        min-width: 0;
+        display: inline-flex;
         align-items: center;
         gap: 12px;
         text-decoration: none;
-        font-weight: 780;
       }
 
-      .brand-mark {
-        width: 34px;
-        height: 34px;
-        border: 1px solid #bfcac1;
-        background:
-          linear-gradient(135deg, #ffffff 0 48%, #dce8dd 48% 100%);
-        display: grid;
-        place-items: center;
-        font-size: 16px;
+      .brand img {
+        width: 42px;
+        height: 42px;
+        object-fit: cover;
+        border: 1px solid var(--line-dark);
+        background: var(--charcoal-2);
+      }
+
+      .brand span {
+        color: #f2f2f2;
+        font-size: 19px;
+        font-weight: 420;
+        text-transform: uppercase;
       }
 
       .nav {
@@ -100,47 +107,60 @@
 
       .nav a,
       .button {
-        min-height: 36px;
+        min-height: 38px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
-        padding: 8px 12px;
-        border: 1px solid var(--line);
-        background: #fff;
+        padding: 8px 13px;
+        border: 1px solid currentColor;
+        border-radius: 6px;
         text-decoration: none;
         font-size: 14px;
         font-weight: 650;
       }
 
-      .nav a:hover,
-      .button:hover {
-        border-color: #aab7ad;
+      .nav a {
+        color: var(--muted-dark);
+        border-color: transparent;
+      }
+
+      .nav a:hover {
+        color: #ffffff;
+        border-color: var(--line-dark);
       }
 
       main {
-        padding: 38px 0 48px;
+        padding-bottom: 54px;
       }
 
-      .intro {
+      .hero {
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        background:
+          radial-gradient(circle at 22% 18%, rgba(209, 174, 85, 0.12), transparent 30%),
+          linear-gradient(180deg, var(--charcoal) 0%, var(--charcoal-2) 100%);
+        color: #f7f7f7;
+        border-bottom: 1px solid #d7d2c6;
+      }
+
+      .hero-inner {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        min-height: 455px;
         display: grid;
-        grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
-        gap: 24px;
-        align-items: stretch;
-        margin-bottom: 28px;
-      }
-
-      .intro-copy {
-        padding: 32px 0;
+        grid-template-columns: minmax(0, 0.95fr) minmax(320px, 1.05fr);
+        gap: 42px;
+        align-items: center;
+        padding: 52px 0 84px;
       }
 
       .eyebrow {
-        margin: 0 0 10px;
-        color: var(--green);
-        font-size: 13px;
+        margin: 0 0 12px;
+        color: var(--gold);
+        font-size: 12px;
         font-weight: 760;
         text-transform: uppercase;
-        letter-spacing: 0;
       }
 
       h1,
@@ -151,73 +171,152 @@
       }
 
       h1 {
-        margin-bottom: 16px;
-        max-width: 760px;
-        font-size: clamp(34px, 5vw, 62px);
-        line-height: 1.02;
-        letter-spacing: 0;
+        max-width: 700px;
+        margin-bottom: 18px;
+        color: #f8f8f8;
+        font-size: clamp(34px, 5vw, 64px);
+        line-height: 1.03;
       }
 
       .lead {
-        max-width: 720px;
-        margin-bottom: 22px;
-        color: var(--muted);
+        max-width: 680px;
+        margin-bottom: 26px;
+        color: var(--muted-dark);
         font-size: 18px;
       }
 
-      .summary {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+      .hero-actions {
+        display: flex;
         gap: 10px;
-        max-width: 720px;
+        flex-wrap: wrap;
       }
 
-      .metric {
+      .button.primary {
+        background: var(--gold);
+        border-color: var(--gold);
+        color: #222222;
+      }
+
+      .button.dark {
+        background: var(--charcoal);
+        border-color: var(--charcoal);
+        color: #ffffff;
+      }
+
+      .button.ghost {
+        color: #f7f7f7;
+        border-color: var(--line-dark);
+        background: transparent;
+      }
+
+      .button.secondary {
+        color: var(--ink);
+        border-color: var(--line);
+        background: #ffffff;
+      }
+
+      .logo-stage {
+        min-height: 330px;
+        display: grid;
+        place-items: center;
+        padding: 22px;
+        border: 1px solid var(--line-dark);
+        background: rgba(40, 40, 42, 0.72);
+        box-shadow: 0 26px 80px rgba(0, 0, 0, 0.18);
+      }
+
+      .logo-stage img {
+        width: min(100%, 660px);
+        height: auto;
+        display: block;
+      }
+
+      .profile-strip {
+        margin-top: -46px;
+        display: grid;
+        grid-template-columns: 240px minmax(0, 1fr) 260px;
+        gap: 18px;
+        align-items: stretch;
+      }
+
+      .avatar-card,
+      .profile-card,
+      .status-card,
+      .project,
+      .legacy-panel,
+      .notice {
         border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.7);
+        border-radius: 6px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+      }
+
+      .avatar-card {
         padding: 14px;
       }
 
-      .metric strong {
-        display: block;
-        font-size: 26px;
-        line-height: 1;
-      }
-
-      .metric span {
-        display: block;
-        margin-top: 6px;
-        color: var(--muted);
-        font-size: 13px;
-      }
-
-      .map-panel {
-        min-height: 320px;
-        border: 1px solid var(--line);
-        background:
-          linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.72)),
-          url("/assets/logo.jpg");
-        background-size: cover;
-        background-position: center;
-        box-shadow: var(--shadow);
+      .avatar-frame {
+        aspect-ratio: 1;
         display: grid;
-        align-content: end;
+        place-items: center;
+        background: var(--charcoal);
+        border: 1px solid var(--line);
         overflow: hidden;
       }
 
-      .map-caption {
-        background: rgba(255, 255, 255, 0.9);
-        border-top: 1px solid var(--line);
-        padding: 18px;
+      .avatar-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
 
-      .map-caption strong {
+      .profile-card,
+      .status-card {
+        padding: 22px;
+      }
+
+      .profile-card h2 {
+        margin: 0 0 4px;
+        color: var(--green);
+        font-size: 29px;
+      }
+
+      .profile-card strong {
         display: block;
-        margin-bottom: 4px;
+        margin-bottom: 12px;
+        font-size: 19px;
       }
 
-      .map-caption span {
+      .profile-card p {
+        margin-bottom: 12px;
+        color: #3e3e40;
+      }
+
+      .status-card {
+        display: grid;
+        align-content: start;
+        gap: 10px;
+      }
+
+      .status-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--line);
         color: var(--muted);
+        font-size: 14px;
+      }
+
+      .status-item:last-child {
+        padding-bottom: 0;
+        border-bottom: 0;
+      }
+
+      .status-item strong {
+        color: var(--ink);
+        font-size: 18px;
       }
 
       .section-head {
@@ -225,12 +324,12 @@
         justify-content: space-between;
         gap: 18px;
         align-items: end;
-        margin: 34px 0 14px;
+        margin: 42px 0 16px;
       }
 
       .section-head h2 {
         margin: 0;
-        font-size: 25px;
+        font-size: 26px;
       }
 
       .section-note {
@@ -245,30 +344,31 @@
       }
 
       .project {
-        border: 1px solid var(--line);
-        background: var(--panel);
         display: grid;
-        grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr) auto;
+        grid-template-columns: minmax(230px, 0.8fr) minmax(0, 1.2fr) auto;
         gap: 16px;
         align-items: center;
         padding: 16px;
       }
 
       .project-title {
+        min-width: 0;
         display: flex;
         align-items: center;
-        gap: 12px;
-        min-width: 0;
+        gap: 13px;
       }
 
       .project-icon {
-        width: 38px;
-        height: 38px;
+        width: 42px;
+        height: 42px;
         flex: 0 0 auto;
         display: grid;
         place-items: center;
-        border: 1px solid var(--line);
-        background: var(--soft);
+        border-radius: 6px;
+        border: 1px solid #3f3f42;
+        background: var(--charcoal);
+        color: var(--gold);
+        font-size: 13px;
         font-weight: 760;
       }
 
@@ -284,14 +384,14 @@
       }
 
       .links {
+        min-width: 0;
         display: grid;
         gap: 8px;
-        min-width: 0;
       }
 
       .link-row {
         display: grid;
-        grid-template-columns: 92px minmax(0, 1fr);
+        grid-template-columns: 100px minmax(0, 1fr);
         gap: 10px;
         align-items: center;
       }
@@ -300,27 +400,28 @@
         justify-self: start;
         padding: 4px 8px;
         border: 1px solid var(--line);
-        background: #f7f8f6;
+        border-radius: 999px;
+        background: #f7f7f5;
         color: var(--muted);
         font-size: 12px;
         font-weight: 720;
       }
 
       .tag.ready {
-        color: var(--green);
-        border-color: #bdd3c8;
-        background: #eef7f2;
+        color: #178149;
+        border-color: #b6dec7;
+        background: #eff9f3;
       }
 
       .tag.legacy {
-        color: var(--gold);
-        border-color: #e0c995;
-        background: #fff7e4;
+        color: #7b5d1c;
+        border-color: #e4cf87;
+        background: #fff8dd;
       }
 
       .url {
         overflow-wrap: anywhere;
-        color: #2d3a33;
+        color: #303032;
         font-size: 14px;
       }
 
@@ -331,38 +432,21 @@
         justify-content: flex-end;
       }
 
-      .button.primary {
-        background: var(--ink);
-        color: #fff;
-        border-color: var(--ink);
-      }
-
-      .button.subtle {
-        color: var(--blue);
-      }
-
-      .notice {
-        margin-top: 20px;
-        border: 1px solid #e0c995;
-        background: #fff7e4;
-        padding: 16px;
-        color: #5e451a;
-      }
-
       .legacy-panel {
         margin-top: 18px;
-        border: 1px solid var(--line);
-        background: var(--panel);
+        overflow: hidden;
       }
 
       .legacy-panel summary {
-        min-height: 54px;
+        min-height: 56px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 16px;
         padding: 14px 16px;
         cursor: pointer;
+        color: #f7f7f7;
+        background: var(--charcoal);
         font-weight: 780;
       }
 
@@ -374,12 +458,14 @@
 
       .legacy-panel summary::after {
         content: "+";
-        width: 26px;
-        height: 26px;
+        width: 28px;
+        height: 28px;
         display: grid;
         place-items: center;
-        border: 1px solid var(--line);
-        background: var(--soft);
+        border: 1px solid var(--line-dark);
+        border-radius: 6px;
+        color: var(--gold);
+        background: var(--charcoal-2);
         font-weight: 760;
       }
 
@@ -409,50 +495,62 @@
         font-weight: 720;
       }
 
+      .notice {
+        margin-top: 20px;
+        padding: 16px;
+        color: #5c4a20;
+        background: #fff8dd;
+        box-shadow: none;
+      }
+
       footer {
         border-top: 1px solid var(--line);
-        padding: 18px 0 28px;
+        padding: 20px 0 30px;
         color: var(--muted);
         font-size: 13px;
       }
 
-      @media (max-width: 920px) {
-        .intro,
+      @media (max-width: 980px) {
+        .hero-inner,
+        .profile-strip,
         .project,
         .legacy-row {
           grid-template-columns: 1fr;
         }
 
-        .project {
-          align-items: stretch;
+        .profile-strip {
+          margin-top: -36px;
         }
 
         .actions {
           justify-content: flex-start;
         }
+
+        .status-card {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
       }
 
-      @media (max-width: 640px) {
+      @media (max-width: 680px) {
         .topbar-inner,
         .section-head {
           align-items: flex-start;
           flex-direction: column;
         }
 
-        main {
-          padding-top: 22px;
+        .hero-inner {
+          min-height: auto;
+          padding: 34px 0 70px;
+          gap: 28px;
         }
 
-        .intro-copy {
-          padding: 12px 0;
-        }
-
-        .summary {
-          grid-template-columns: 1fr;
-        }
-
-        .map-panel {
+        .logo-stage {
           min-height: 230px;
+          padding: 12px;
+        }
+
+        .status-card {
+          grid-template-columns: 1fr;
         }
 
         .link-row {
@@ -470,8 +568,8 @@
       <header class="topbar">
         <div class="topbar-inner">
           <a class="brand" href="/">
-            <span class="brand-mark" aria-hidden="true">UC</span>
-            <span>Unity Constructor Hub</span>
+            <img src="assets/kognika-mark.png" alt="" />
+            <span>Когника</span>
           </a>
           <nav class="nav" aria-label="Навигация">
             <a href="#projects">Проекты</a>
@@ -482,39 +580,58 @@
       </header>
 
       <main>
-        <section class="intro" aria-labelledby="page-title">
-          <div class="intro-copy">
-            <p class="eyebrow">Единая точка входа</p>
-            <h1 id="page-title">Карта проектов на unity-constructor.site</h1>
-            <p class="lead">
-              Здесь собраны рабочие папочные адреса и отдельные поддомены.
-              Старая структура остается доступной, а новые проекты можно
-              постепенно переводить на отдельные поддомены.
+        <section class="hero" aria-labelledby="page-title">
+          <div class="hero-inner">
+            <div>
+              <p class="eyebrow">AI-боты и backend-инфраструктура</p>
+              <h1 id="page-title">Когника собирает рабочие проекты в один аккуратный hub</h1>
+              <p class="lead">
+                Поддомены, старые пути и служебные проекты остаются на месте, но визуально
+                hub теперь живет в айдентике Когники: графит, светлый знак и золотой акцент.
+              </p>
+              <div class="hero-actions">
+                <a class="button primary" href="#projects">Открыть проекты</a>
+                <a class="button ghost" href="#legacy">Показать legacy</a>
+              </div>
+            </div>
+            <div class="logo-stage" aria-label="Новый логотип Когника">
+              <img src="assets/kognika-logo.png" alt="Когника" />
+            </div>
+          </div>
+        </section>
+
+        <section class="profile-strip" aria-label="Профиль Когника">
+          <div class="avatar-card">
+            <div class="avatar-frame">
+              <img src="assets/kognika-mark.png" alt="" />
+            </div>
+          </div>
+          <div class="profile-card">
+            <h2>Когника</h2>
+            <strong>Разработчик AI-ботов и автоматизации</strong>
+            <p>
+              Разрабатываю интеллектуальных AI-ассистентов, backend-сервисы и web-интерфейсы
+              для управления инструментами, продажами, поддержкой и внутренней рутиной.
             </p>
-            <div class="summary" aria-label="Сводка">
-              <div class="metric">
-                <strong>6</strong>
-                <span>рабочих поддоменов</span>
-              </div>
-              <div class="metric">
-                <strong>1</strong>
-                <span>legacy-проект без миграции</span>
-              </div>
-              <div class="metric">
-                <strong>2</strong>
-                <span>служебные папки основного сайта</span>
-              </div>
-            </div>
+            <p>
+              Старый логотип и прежние адреса не удаляются: новый бренд включен отдельными
+              файлами, а legacy-раздел ниже сохраняет привычные входы.
+            </p>
           </div>
-          <div class="map-panel" aria-label="Визуальная карточка проекта">
-            <div class="map-caption">
-              <strong>Переезд без поломки старых ссылок</strong>
-              <span>
-                Старые URL ведут в папки основного сайта, новые URL ведут
-                в отдельные корни поддоменов.
-              </span>
+          <aside class="status-card" aria-label="Сводка">
+            <div class="status-item">
+              <span>Поддомены</span>
+              <strong>6</strong>
             </div>
-          </div>
+            <div class="status-item">
+              <span>Legacy-пути</span>
+              <strong>7</strong>
+            </div>
+            <div class="status-item">
+              <span>Бренд</span>
+              <strong>Когника</strong>
+            </div>
+          </aside>
         </section>
 
         <section id="projects" aria-labelledby="projects-title">
@@ -524,8 +641,8 @@
               <h2 id="projects-title">Рабочие адреса и поддомены</h2>
             </div>
             <p class="section-note">
-              Основные карточки ведут на отдельные сайты. Старые папочные
-              адреса собраны ниже в раскрывающемся legacy-списке.
+              Основные карточки ведут на отдельные сайты. Старые папочные адреса собраны ниже
+              в раскрывающемся legacy-списке.
             </p>
           </div>
 
@@ -545,7 +662,7 @@
                 </div>
               </div>
               <div class="actions">
-                <a class="button primary" href="https://ai-automation-studio.unity-constructor.site/">Открыть</a>
+                <a class="button dark" href="https://ai-automation-studio.unity-constructor.site/">Открыть</a>
               </div>
             </article>
 
@@ -564,7 +681,7 @@
                 </div>
               </div>
               <div class="actions">
-                <a class="button primary" href="https://api.unity-constructor.site/">Открыть</a>
+                <a class="button dark" href="https://api.unity-constructor.site/">Открыть</a>
               </div>
             </article>
 
@@ -583,7 +700,7 @@
                 </div>
               </div>
               <div class="actions">
-                <a class="button primary" href="https://test-site-usmanova.unity-constructor.site/">Открыть</a>
+                <a class="button dark" href="https://test-site-usmanova.unity-constructor.site/">Открыть</a>
               </div>
             </article>
 
@@ -602,7 +719,7 @@
                 </div>
               </div>
               <div class="actions">
-                <a class="button primary" href="https://webassist.unity-constructor.site/">Открыть</a>
+                <a class="button dark" href="https://webassist.unity-constructor.site/">Открыть</a>
               </div>
             </article>
 
@@ -611,7 +728,7 @@
                 <span class="project-icon">W-</span>
                 <div>
                   <h3>Web Assist</h3>
-                  <p>Отдельная папка Web Assist, оставлена отдельной ссылкой.</p>
+                  <p>Отдельная папка Web Assist, оставленная отдельной ссылкой.</p>
                 </div>
               </div>
               <div class="links">
@@ -621,7 +738,7 @@
                 </div>
               </div>
               <div class="actions">
-                <a class="button primary" href="https://web-assist.unity-constructor.site/">Открыть</a>
+                <a class="button dark" href="https://web-assist.unity-constructor.site/">Открыть</a>
               </div>
             </article>
 
@@ -640,7 +757,7 @@
                 </div>
               </div>
               <div class="actions">
-                <a class="button primary" href="https://work-search.unity-constructor.site/">Открыть</a>
+                <a class="button dark" href="https://work-search.unity-constructor.site/">Открыть</a>
               </div>
             </article>
           </div>
@@ -651,51 +768,50 @@
               <div class="legacy-row">
                 <span class="legacy-name">AI Automation Studio</span>
                 <span class="url">unity-constructor.site/ai-automation-studio/</span>
-                <a class="button" href="/ai-automation-studio/">Открыть старый путь</a>
+                <a class="button secondary" href="/ai-automation-studio/">Открыть старый путь</a>
               </div>
               <div class="legacy-row">
                 <span class="legacy-name">API</span>
                 <span class="url">unity-constructor.site/api/</span>
-                <a class="button" href="/api/">Открыть старый путь</a>
+                <a class="button secondary" href="/api/">Открыть старый путь</a>
               </div>
               <div class="legacy-row">
                 <span class="legacy-name">Test Site Usmanova</span>
                 <span class="url">unity-constructor.site/test_site_usmanova/</span>
-                <a class="button" href="/test_site_usmanova/">Открыть старый путь</a>
+                <a class="button secondary" href="/test_site_usmanova/">Открыть старый путь</a>
               </div>
               <div class="legacy-row">
                 <span class="legacy-name">Webassist</span>
                 <span class="url">unity-constructor.site/webassist/</span>
-                <a class="button" href="/webassist/">Открыть старый путь</a>
+                <a class="button secondary" href="/webassist/">Открыть старый путь</a>
               </div>
               <div class="legacy-row">
                 <span class="legacy-name">Web Assist</span>
                 <span class="url">unity-constructor.site/web-assist/</span>
-                <a class="button" href="/web-assist/">Открыть старый путь</a>
+                <a class="button secondary" href="/web-assist/">Открыть старый путь</a>
               </div>
               <div class="legacy-row">
                 <span class="legacy-name">Work Search</span>
                 <span class="url">unity-constructor.site/work_search/</span>
-                <a class="button" href="/work_search/">Открыть старый путь</a>
+                <a class="button secondary" href="/work_search/">Открыть старый путь</a>
               </div>
               <div class="legacy-row">
                 <span class="legacy-name">Unityconstructor</span>
                 <span class="url">unity-constructor.site/unityconstructor/</span>
-                <a class="button" href="/unityconstructor/">Открыть старый путь</a>
+                <a class="button secondary" href="/unityconstructor/">Открыть старый путь</a>
               </div>
             </div>
           </details>
 
           <div class="notice">
-            Служебные папки <strong>assets</strong> и <strong>uploads</strong>
-            остаются частью основного сайта и не выносятся в поддомены.
+            Служебные папки <strong>assets</strong> и <strong>uploads</strong> остаются частью
+            основного сайта и не выносятся в поддомены.
           </div>
         </section>
       </main>
 
       <footer>
-        Unity Constructor Hub. Старые ссылки сохраняются, поддомены работают с
-        отдельными корнями и HTTPS.
+        Когника Hub. Старые ссылки сохраняются, поддомены работают с отдельными корнями и HTTPS.
       </footer>
     </div>
   </body>

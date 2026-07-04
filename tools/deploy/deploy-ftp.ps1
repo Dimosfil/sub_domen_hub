@@ -57,7 +57,13 @@ function Get-ConfigValue {
 
     $envName = Get-OptionalProperty -Object $Object -Name $EnvNameProperty
     if (-not [string]::IsNullOrWhiteSpace($envName)) {
-        $value = [Environment]::GetEnvironmentVariable($envName)
+        $value = [Environment]::GetEnvironmentVariable($envName, "Process")
+        if ([string]::IsNullOrWhiteSpace($value)) {
+            $value = [Environment]::GetEnvironmentVariable($envName, "User")
+        }
+        if ([string]::IsNullOrWhiteSpace($value)) {
+            $value = [Environment]::GetEnvironmentVariable($envName, "Machine")
+        }
         if (-not [string]::IsNullOrWhiteSpace($value)) {
             return $value
         }
@@ -342,6 +348,7 @@ function Invoke-FtpRequest {
     $request = [System.Net.FtpWebRequest]::Create($Uri)
     $request.Method = $Method
     $request.Credentials = $Credential
+    $request.Proxy = $null
     $request.UseBinary = $true
     $request.UsePassive = $true
     $request.EnableSsl = $EnableSsl

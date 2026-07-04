@@ -1229,11 +1229,11 @@ path is undocumented, ask one concise clarification question instead of
 guessing. Follow `patterns/PROJECT_DEV_PROD_SERVICES.md`.
 
 `gi ftp config` / `ги фтп конфиг` creates, inspects, or updates the current
-project's FTP/SFTP config without uploading. Use a separate project-local file:
-`tools/deploy/ftp.local.json`. Prefer secrets through environment variables or
-private keys; do not commit real hostnames, usernames, passwords, tokens,
-private keys, or private remote paths unless project policy explicitly marks
-them non-secret.
+project's FTP/SFTP config without uploading. Use separate project-local ignored
+files such as `tools/deploy/sftp.local.json` or `tools/deploy/ftp.local.json`.
+Prefer secrets through environment variables or private keys; do not commit real
+hostnames, usernames, passwords, tokens, private keys, or private remote paths
+unless project policy explicitly marks them non-secret.
 
 `gi ftp service` / `ги фтп сервис` manually registers, inspects, or selects an
 FTP/FTPS/SFTP service record in config-service without uploading. When a project
@@ -1252,10 +1252,12 @@ path and saves it in `tools/deploy/ftp.local.json`.
 
 `gi ftp push` / `ги фтп пуш` is the explicit upload command. `gi ftp` /
 `ги фтп` remains a shorter alias. The agent first reads project-local deploy
-instructions and
-`tools/deploy/ftp.local.json`, builds the configured `localPath` when needed,
-then uploads to `remotePath`. If the config is missing, use the redacted
-template shape from `templates/ftp.local.template.json` or
+instructions. If `tools/deploy/deploy.ps1` exists, run it as the single
+entrypoint; it selects SFTP, FTPS, or FTP from local config, builds the
+configured source when needed, and uploads to `remotePath`. If the entrypoint is
+missing, use `tools/deploy/sftp.local.json` or `tools/deploy/ftp.local.json`
+directly. If config is missing, use the redacted template shape from
+`tools/deploy/sftp.local.example.json`, `templates/ftp.local.template.json`, or
 `tools/deploy/ftp.local.example.json` and ask only for missing required values.
 Do not print secrets or full credential-bearing commands.
 

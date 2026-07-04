@@ -34,9 +34,13 @@
   choose, or update the remote upload folder (`remotePath`) without uploading.
   Treat `gi ftp service`, `gi ftp сервис`, and `ги фтп сервис` as requests to
   manually register, inspect, or select an FTP/FTPS/SFTP service record in
-  config-service without uploading. Read project-local deploy instructions and
-  `tools/deploy/ftp.local.json` first; when a project needs FTP and local config
-  does not name a target service, query config-service for FTP-capable services.
+  config-service without uploading. Read project-local deploy instructions
+  first. If `tools/deploy/deploy.ps1` exists, use it as the single deploy
+  entrypoint; it selects SFTP, FTPS, or FTP from project-local config and
+  forwards source/build/target arguments. If that entrypoint is absent, read
+  `tools/deploy/sftp.local.json` or `tools/deploy/ftp.local.json` first; when a
+  project needs FTP/SFTP and local config does not name a target service, query
+  config-service for capable services.
   If exactly one matching service exists, use it after verifying its contract;
   if several exist, ask the user to choose with the same plain inline numbered
   checkbox marker style used by language selection. Keep secrets out of
@@ -44,9 +48,10 @@
   store only discovery metadata and secret references such as environment
   variable names. Keep project-specific deploy settings in the separate
   project-local config file rather than shared instructions or chat history.
-  Prefer `tools/deploy/ftp.local.example.json` only as a redacted shape. Do not
-  commit hostnames, usernames, passwords, tokens, private keys, or private
-  remote paths unless project policy explicitly marks them non-secret. Follow
+  Prefer `tools/deploy/sftp.local.example.json` or
+  `tools/deploy/ftp.local.example.json` only as redacted shapes. Do not commit
+  hostnames, usernames, passwords, tokens, private keys, or private remote paths
+  unless project policy explicitly marks them non-secret. Follow
   `patterns/PROJECT_FTP_DEPLOY.md`.
 - Treat `gi reboot`, `ги ребут`, `gi restart`, and `ги рестарт` as requests to
   start or restart all documented applications in the current project using

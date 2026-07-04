@@ -155,6 +155,18 @@ Inspect logs:
 # TODO
 ```
 
+Deploy current configured site:
+
+```powershell
+.\tools\deploy\deploy.ps1
+```
+
+Dry-run deploy:
+
+```powershell
+.\tools\deploy\deploy.ps1 -DryRun
+```
+
 ## Working Areas
 
 - Source: `TODO`

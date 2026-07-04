@@ -1,0 +1,38 @@
+{
+  "source": {
+    "path": ".",
+    "gitUrl": "",
+    "ref": ""
+  },
+  "build": {
+    "command": "",
+    "outputPath": "."
+  },
+  "projectMapPath": "hosting-projects.json",
+  "deployMode": "legacy",
+  "target": {
+    "protocol": "sftp",
+    "hostEnv": "SUB_DOMEN_HUB_SFTP_HOST",
+    "port": 22,
+    "usernameEnv": "SUB_DOMEN_HUB_SFTP_USER",
+    "passwordEnv": "SUB_DOMEN_HUB_SFTP_PASSWORD",
+    "remotePath": "/absolute/hosting/path/to/site",
+    "pathRewrites": [
+      {
+        "from": "/www",
+        "to": "/absolute/hosting/path/www"
+      }
+    ]
+  },
+  "exclude": [
+    ".git/**",
+    ".env",
+    ".env.*",
+    "node_modules/**",
+    "tools/deploy/*.local.json",
+    "tools/project-memory/*.sqlite*",
+    "tools/project-memory/vector-index/**",
+    "tools/project-memory/chroma/**",
+    "*.log"
+  ]
+}
