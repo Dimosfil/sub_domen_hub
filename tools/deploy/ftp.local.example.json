@@ -1,0 +1,31 @@
+{
+  "source": {
+    "path": ".",
+    "gitUrl": "",
+    "ref": ""
+  },
+  "build": {
+    "command": "",
+    "outputPath": "."
+  },
+  "projectMapPath": "hosting-projects.json",
+  "deployMode": "legacy",
+  "target": {
+    "protocol": "ftp",
+    "hostEnv": "SUB_DOMEN_HUB_FTP_HOST",
+    "usernameEnv": "SUB_DOMEN_HUB_FTP_USER",
+    "passwordEnv": "SUB_DOMEN_HUB_FTP_PASSWORD",
+    "remotePath": "/path/on/hosting/public_html"
+  },
+  "exclude": [
+    ".git/**",
+    ".env",
+    ".env.*",
+    "node_modules/**",
+    "tools/deploy/*.local.json",
+    "tools/project-memory/*.sqlite*",
+    "tools/project-memory/vector-index/**",
+    "tools/project-memory/chroma/**",
+    "*.log"
+  ]
+}

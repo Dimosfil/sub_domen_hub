@@ -1,0 +1,71 @@
+{
+  "baseDomain": "unity-constructor.site",
+  "legacyRoot": "/www/unity-constructor.site",
+  "subdomainRootTemplate": "/www/{host}",
+  "defaultMode": "legacy",
+  "projects": [
+    {
+      "id": "ai-automation-studio",
+      "legacyPath": "/www/unity-constructor.site/ai-automation-studio",
+      "subdomain": "ai-automation-studio.unity-constructor.site",
+      "subdomainPath": "/www/ai-automation-studio.unity-constructor.site",
+      "status": "subdomain-active"
+    },
+    {
+      "id": "api",
+      "legacyPath": "/www/unity-constructor.site/api",
+      "subdomain": "api.unity-constructor.site",
+      "subdomainPath": "/www/api.unity-constructor.site",
+      "status": "subdomain-active"
+    },
+    {
+      "id": "test_site_usmanova",
+      "legacyPath": "/www/unity-constructor.site/test_site_usmanova",
+      "subdomain": "test-site-usmanova.unity-constructor.site",
+      "subdomainPath": "/www/test-site-usmanova.unity-constructor.site",
+      "status": "subdomain-active"
+    },
+    {
+      "id": "webassist",
+      "legacyPath": "/www/unity-constructor.site/webassist",
+      "subdomain": "webassist.unity-constructor.site",
+      "subdomainPath": "/www/webassist.unity-constructor.site",
+      "status": "subdomain-active"
+    },
+    {
+      "id": "web-assist",
+      "legacyPath": "/www/unity-constructor.site/web-assist",
+      "subdomain": "web-assist.unity-constructor.site",
+      "subdomainPath": "/www/web-assist.unity-constructor.site",
+      "status": "subdomain-active"
+    },
+    {
+      "id": "work_search",
+      "legacyPath": "/www/unity-constructor.site/work_search",
+      "subdomain": "work-search.unity-constructor.site",
+      "subdomainPath": "/www/work-search.unity-constructor.site",
+      "status": "subdomain-active"
+    },
+    {
+      "id": "unityconstructor",
+      "legacyPath": "/www/unity-constructor.site/unityconstructor",
+      "subdomain": "",
+      "subdomainPath": "",
+      "status": "legacy-only"
+    },
+    {
+      "id": "assets",
+      "legacyPath": "/www/unity-constructor.site/assets",
+      "subdomain": "",
+      "subdomainPath": "",
+      "status": "shared-directory"
+    },
+    {
+      "id": "uploads",
+      "legacyPath": "/www/unity-constructor.site/uploads",
+      "subdomain": "",
+      "subdomainPath": "",
+      "status": "shared-directory"
+    }
+  ]
+}

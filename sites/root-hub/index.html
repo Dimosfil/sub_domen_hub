@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Unity Constructor Hub</title>
+    <meta
+      name="description"
+      content="Unity Constructor Hub: карта проектов, старые адреса и рабочие поддомены."
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f6f7f4;
+        --ink: #17201c;
+        --muted: #5d6861;
+        --line: #d8ded7;
+        --panel: #ffffff;
+        --soft: #e8efe8;
+        --blue: #2458c8;
+        --green: #27785d;
+        --gold: #9b6a1d;
+        --danger: #9c3a2e;
+        --shadow: 0 18px 48px rgba(23, 32, 28, 0.1);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        line-height: 1.5;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .shell {
+        min-height: 100vh;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+      }
+
+      .topbar {
+        border-bottom: 1px solid var(--line);
+        background: rgba(246, 247, 244, 0.92);
+        backdrop-filter: blur(14px);
+        position: sticky;
+        top: 0;
+        z-index: 5;
+      }
+
+      .topbar-inner,
+      main,
+      footer {
+        width: min(1160px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .topbar-inner {
+        min-height: 68px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        font-weight: 780;
+      }
+
+      .brand-mark {
+        width: 34px;
+        height: 34px;
+        border: 1px solid #bfcac1;
+        background:
+          linear-gradient(135deg, #ffffff 0 48%, #dce8dd 48% 100%);
+        display: grid;
+        place-items: center;
+        font-size: 16px;
+      }
+
+      .nav {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .nav a,
+      .button {
+        min-height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border: 1px solid var(--line);
+        background: #fff;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 650;
+      }
+
+      .nav a:hover,
+      .button:hover {
+        border-color: #aab7ad;
+      }
+
+      main {
+        padding: 38px 0 48px;
+      }
+
+      .intro {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+        gap: 24px;
+        align-items: stretch;
+        margin-bottom: 28px;
+      }
+
+      .intro-copy {
+        padding: 32px 0;
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--green);
+        font-size: 13px;
+        font-weight: 760;
+        text-transform: uppercase;
+        letter-spacing: 0;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        margin-bottom: 16px;
+        max-width: 760px;
+        font-size: clamp(34px, 5vw, 62px);
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 720px;
+        margin-bottom: 22px;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      .summary {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        max-width: 720px;
+      }
+
+      .metric {
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.7);
+        padding: 14px;
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 26px;
+        line-height: 1;
+      }
+
+      .metric span {
+        display: block;
+        margin-top: 6px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .map-panel {
+        min-height: 320px;
+        border: 1px solid var(--line);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.72)),
+          url("/assets/logo.jpg");
+        background-size: cover;
+        background-position: center;
+        box-shadow: var(--shadow);
+        display: grid;
+        align-content: end;
+        overflow: hidden;
+      }
+
+      .map-caption {
+        background: rgba(255, 255, 255, 0.9);
+        border-top: 1px solid var(--line);
+        padding: 18px;
+      }
+
+      .map-caption strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .map-caption span {
+        color: var(--muted);
+      }
+
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        align-items: end;
+        margin: 34px 0 14px;
+      }
+
+      .section-head h2 {
+        margin: 0;
+        font-size: 25px;
+      }
+
+      .section-note {
+        margin: 0;
+        color: var(--muted);
+        max-width: 560px;
+      }
+
+      .project-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .project {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        display: grid;
+        grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr) auto;
+        gap: 16px;
+        align-items: center;
+        padding: 16px;
+      }
+
+      .project-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+      }
+
+      .project-icon {
+        width: 38px;
+        height: 38px;
+        flex: 0 0 auto;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        background: var(--soft);
+        font-weight: 760;
+      }
+
+      .project h3 {
+        margin: 0 0 4px;
+        font-size: 17px;
+      }
+
+      .project p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .links {
+        display: grid;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .link-row {
+        display: grid;
+        grid-template-columns: 92px minmax(0, 1fr);
+        gap: 10px;
+        align-items: center;
+      }
+
+      .tag {
+        justify-self: start;
+        padding: 4px 8px;
+        border: 1px solid var(--line);
+        background: #f7f8f6;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 720;
+      }
+
+      .tag.ready {
+        color: var(--green);
+        border-color: #bdd3c8;
+        background: #eef7f2;
+      }
+
+      .tag.legacy {
+        color: var(--gold);
+        border-color: #e0c995;
+        background: #fff7e4;
+      }
+
+      .url {
+        overflow-wrap: anywhere;
+        color: #2d3a33;
+        font-size: 14px;
+      }
+
+      .actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .button.primary {
+        background: var(--ink);
+        color: #fff;
+        border-color: var(--ink);
+      }
+
+      .button.subtle {
+        color: var(--blue);
+      }
+
+      .notice {
+        margin-top: 20px;
+        border: 1px solid #e0c995;
+        background: #fff7e4;
+        padding: 16px;
+        color: #5e451a;
+      }
+
+      .legacy-panel {
+        margin-top: 18px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+      }
+
+      .legacy-panel summary {
+        min-height: 54px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 14px 16px;
+        cursor: pointer;
+        font-weight: 780;
+      }
+
+      .legacy-panel summary::marker,
+      .legacy-panel summary::-webkit-details-marker {
+        display: none;
+        content: "";
+      }
+
+      .legacy-panel summary::after {
+        content: "+";
+        width: 26px;
+        height: 26px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        background: var(--soft);
+        font-weight: 760;
+      }
+
+      .legacy-panel[open] summary::after {
+        content: "-";
+      }
+
+      .legacy-content {
+        border-top: 1px solid var(--line);
+        padding: 8px 16px 16px;
+      }
+
+      .legacy-row {
+        display: grid;
+        grid-template-columns: minmax(180px, 0.8fr) minmax(0, 1.2fr) auto;
+        gap: 14px;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .legacy-row:last-child {
+        border-bottom: 0;
+      }
+
+      .legacy-name {
+        font-weight: 720;
+      }
+
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 18px 0 28px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      @media (max-width: 920px) {
+        .intro,
+        .project,
+        .legacy-row {
+          grid-template-columns: 1fr;
+        }
+
+        .project {
+          align-items: stretch;
+        }
+
+        .actions {
+          justify-content: flex-start;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .topbar-inner,
+        .section-head {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        main {
+          padding-top: 22px;
+        }
+
+        .intro-copy {
+          padding: 12px 0;
+        }
+
+        .summary {
+          grid-template-columns: 1fr;
+        }
+
+        .map-panel {
+          min-height: 230px;
+        }
+
+        .link-row {
+          grid-template-columns: 1fr;
+        }
+
+        .button {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <div class="topbar-inner">
+          <a class="brand" href="/">
+            <span class="brand-mark" aria-hidden="true">UC</span>
+            <span>Unity Constructor Hub</span>
+          </a>
+          <nav class="nav" aria-label="Навигация">
+            <a href="#projects">Проекты</a>
+            <a href="#legacy">Старые адреса</a>
+            <a href="#subdomains">Поддомены</a>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <section class="intro" aria-labelledby="page-title">
+          <div class="intro-copy">
+            <p class="eyebrow">Единая точка входа</p>
+            <h1 id="page-title">Карта проектов на unity-constructor.site</h1>
+            <p class="lead">
+              Здесь собраны рабочие папочные адреса и отдельные поддомены.
+              Старая структура остается доступной, а новые проекты можно
+              постепенно переводить на отдельные поддомены.
+            </p>
+            <div class="summary" aria-label="Сводка">
+              <div class="metric">
+                <strong>6</strong>
+                <span>рабочих поддоменов</span>
+              </div>
+              <div class="metric">
+                <strong>1</strong>
+                <span>legacy-проект без миграции</span>
+              </div>
+              <div class="metric">
+                <strong>2</strong>
+                <span>служебные папки основного сайта</span>
+              </div>
+            </div>
+          </div>
+          <div class="map-panel" aria-label="Визуальная карточка проекта">
+            <div class="map-caption">
+              <strong>Переезд без поломки старых ссылок</strong>
+              <span>
+                Старые URL ведут в папки основного сайта, новые URL ведут
+                в отдельные корни поддоменов.
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <section id="projects" aria-labelledby="projects-title">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Проекты</p>
+              <h2 id="projects-title">Рабочие адреса и поддомены</h2>
+            </div>
+            <p class="section-note">
+              Основные карточки ведут на отдельные сайты. Старые папочные
+              адреса собраны ниже в раскрывающемся legacy-списке.
+            </p>
+          </div>
+
+          <div class="project-list">
+            <article class="project" id="subdomains">
+              <div class="project-title">
+                <span class="project-icon">AI</span>
+                <div>
+                  <h3>AI Automation Studio</h3>
+                  <p>Инструменты автоматизации и AI-сценариев.</p>
+                </div>
+              </div>
+              <div class="links">
+                <div class="link-row">
+                  <span class="tag ready">поддомен</span>
+                  <span class="url">ai-automation-studio.unity-constructor.site</span>
+                </div>
+              </div>
+              <div class="actions">
+                <a class="button primary" href="https://ai-automation-studio.unity-constructor.site/">Открыть</a>
+              </div>
+            </article>
+
+            <article class="project">
+              <div class="project-title">
+                <span class="project-icon">API</span>
+                <div>
+                  <h3>API</h3>
+                  <p>Серверная часть и публичные API-маршруты.</p>
+                </div>
+              </div>
+              <div class="links">
+                <div class="link-row">
+                  <span class="tag ready">поддомен</span>
+                  <span class="url">api.unity-constructor.site</span>
+                </div>
+              </div>
+              <div class="actions">
+                <a class="button primary" href="https://api.unity-constructor.site/">Открыть</a>
+              </div>
+            </article>
+
+            <article class="project">
+              <div class="project-title">
+                <span class="project-icon">TU</span>
+                <div>
+                  <h3>Test Site Usmanova</h3>
+                  <p>Тестовая площадка и демонстрационный сайт.</p>
+                </div>
+              </div>
+              <div class="links">
+                <div class="link-row">
+                  <span class="tag ready">поддомен</span>
+                  <span class="url">test-site-usmanova.unity-constructor.site</span>
+                </div>
+              </div>
+              <div class="actions">
+                <a class="button primary" href="https://test-site-usmanova.unity-constructor.site/">Открыть</a>
+              </div>
+            </article>
+
+            <article class="project">
+              <div class="project-title">
+                <span class="project-icon">WA</span>
+                <div>
+                  <h3>Webassist</h3>
+                  <p>Основной проект Webassist.</p>
+                </div>
+              </div>
+              <div class="links">
+                <div class="link-row">
+                  <span class="tag ready">поддомен</span>
+                  <span class="url">webassist.unity-constructor.site</span>
+                </div>
+              </div>
+              <div class="actions">
+                <a class="button primary" href="https://webassist.unity-constructor.site/">Открыть</a>
+              </div>
+            </article>
+
+            <article class="project">
+              <div class="project-title">
+                <span class="project-icon">W-</span>
+                <div>
+                  <h3>Web Assist</h3>
+                  <p>Отдельная папка Web Assist, оставлена отдельной ссылкой.</p>
+                </div>
+              </div>
+              <div class="links">
+                <div class="link-row">
+                  <span class="tag ready">поддомен</span>
+                  <span class="url">web-assist.unity-constructor.site</span>
+                </div>
+              </div>
+              <div class="actions">
+                <a class="button primary" href="https://web-assist.unity-constructor.site/">Открыть</a>
+              </div>
+            </article>
+
+            <article class="project">
+              <div class="project-title">
+                <span class="project-icon">WS</span>
+                <div>
+                  <h3>Work Search</h3>
+                  <p>Поиск работы, заявок или внутренних задач.</p>
+                </div>
+              </div>
+              <div class="links">
+                <div class="link-row">
+                  <span class="tag ready">поддомен</span>
+                  <span class="url">work-search.unity-constructor.site</span>
+                </div>
+              </div>
+              <div class="actions">
+                <a class="button primary" href="https://work-search.unity-constructor.site/">Открыть</a>
+              </div>
+            </article>
+          </div>
+
+          <details class="legacy-panel" id="legacy">
+            <summary>Legacy адреса</summary>
+            <div class="legacy-content">
+              <div class="legacy-row">
+                <span class="legacy-name">AI Automation Studio</span>
+                <span class="url">unity-constructor.site/ai-automation-studio/</span>
+                <a class="button" href="/ai-automation-studio/">Открыть старый путь</a>
+              </div>
+              <div class="legacy-row">
+                <span class="legacy-name">API</span>
+                <span class="url">unity-constructor.site/api/</span>
+                <a class="button" href="/api/">Открыть старый путь</a>
+              </div>
+              <div class="legacy-row">
+                <span class="legacy-name">Test Site Usmanova</span>
+                <span class="url">unity-constructor.site/test_site_usmanova/</span>
+                <a class="button" href="/test_site_usmanova/">Открыть старый путь</a>
+              </div>
+              <div class="legacy-row">
+                <span class="legacy-name">Webassist</span>
+                <span class="url">unity-constructor.site/webassist/</span>
+                <a class="button" href="/webassist/">Открыть старый путь</a>
+              </div>
+              <div class="legacy-row">
+                <span class="legacy-name">Web Assist</span>
+                <span class="url">unity-constructor.site/web-assist/</span>
+                <a class="button" href="/web-assist/">Открыть старый путь</a>
+              </div>
+              <div class="legacy-row">
+                <span class="legacy-name">Work Search</span>
+                <span class="url">unity-constructor.site/work_search/</span>
+                <a class="button" href="/work_search/">Открыть старый путь</a>
+              </div>
+              <div class="legacy-row">
+                <span class="legacy-name">Unityconstructor</span>
+                <span class="url">unity-constructor.site/unityconstructor/</span>
+                <a class="button" href="/unityconstructor/">Открыть старый путь</a>
+              </div>
+            </div>
+          </details>
+
+          <div class="notice">
+            Служебные папки <strong>assets</strong> и <strong>uploads</strong>
+            остаются частью основного сайта и не выносятся в поддомены.
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        Unity Constructor Hub. Старые ссылки сохраняются, поддомены работают с
+        отдельными корнями и HTTPS.
+      </footer>
+    </div>
+  </body>
+</html>
