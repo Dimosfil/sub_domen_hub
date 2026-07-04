@@ -18,6 +18,13 @@ comparison to a named repository or product.
 
 - Treat every product, demo, customer, project type, task, workflow run, and
   generated artifact as replaceable input or output.
+- Use `tools/` for durable development tooling, automation scripts, adapters,
+  bootstrap commands, deployment helpers, and redacted example manifests. Do not
+  place generated product output, selected-run artifacts, uploaded site
+  contents, screenshots, raw exports, build bundles, downloaded datasets, or
+  one-off work results under `tools/` merely because an agent or script created
+  them. Store those files in project-local artifact, evidence, output, data,
+  docs-asset, build, or release locations documented by the project.
 - Do not let one selected request, run, generated artifact, or debugging
   example define the generic runtime contract. Extract the reusable behavior and
   keep the concrete case as replaceable task data, fixture data, or documented
@@ -69,6 +76,10 @@ with these additional product-boundary constraints:
 - Keep orchestration logic separate from product/domain logic, UI rendering,
   persistence, external service adapters, filesystem layout, and generated
   artifact content.
+- When a tool needs to read or write generated outputs, make the output root an
+  explicit project-local configuration, task payload, manifest, or command
+  argument. Validate that target before writing instead of falling back to the
+  tool's own source folder.
 - Prefer established architecture patterns that fit the stack, such as
   layered architecture, hexagonal/ports-and-adapters, clean architecture,
   domain-driven design, microservices, feature modules, MVC/MVVM, repository
@@ -88,6 +99,8 @@ for:
 - product or demo names;
 - customer or business-domain names;
 - fixed repository, folder, or artifact slugs;
+- generated or downloaded outputs written below `tools/` without an explicit
+  project-local tooling contract that marks them as small reviewable manifests;
 - fixed stack choices that should come from task data;
 - fixed ports, URLs, service IDs, or dashboard links;
 - UI copy that names a generated product instead of the runtime feature;

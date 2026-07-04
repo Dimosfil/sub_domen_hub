@@ -32,8 +32,9 @@ implemented against each goal criterion and list remaining gaps as blockers.
   known mojibake form such as `РіРё ...`, treat it as a concrete task even when
   the message is short. First read `COMMANDS.md` when present, then read every
   runtime module routed to that command before acting.
-- For state-changing GI commands that start, stop, restart, rebuild, deploy,
-  test, install, reset, update, commit, push, or manage task-manager state, do
+- For state-changing GI commands that start, stop, restart, build, rebuild,
+  deploy, test, install, reset, update, commit, push, or manage task-manager
+  state, do
   not execute from memory, old chat examples, or a command name alone. If the
   command's routed module is unavailable, stop and report the missing path.
 - For `gi restart`, `gi reboot`, `gi docker`, `ги рестарт`, `ги ребут`,
@@ -90,7 +91,8 @@ Use the RAG startup flow and retrieve only task-relevant context.
 - Config-service, service guide/contract lookup, task manager commands,
   manager-backed and local sprint commands, and web-service port registration:
   `patterns/AGENTS_RUNTIME/08-config-service-and-task-manager.md`
-- Dev/prod online service publication, FTP deploy, restart/reboot,
+- Dev/prod online service publication, FTP deploy, project build/rebuild,
+  restart/reboot,
   Docker/Compose restart, first test, full test, default reset, installer
   packaging, SQL/vector inspection, and project/RAG rebuild commands:
   `patterns/AGENTS_RUNTIME/09-project-operation-commands.md`
@@ -118,6 +120,14 @@ crawled/downloaded files, large logs, model outputs, build artifacts, export
 bundles, or run datasets in `tools/project-memory/`. Use a project-local
 artifact/evidence/output/data/docs-asset location and keep only compact
 manifests, summaries, checksums, or links in project memory when needed.
+
+Use `tools/` for durable development and agent tooling such as scripts,
+adapters, bootstrap commands, deployment helpers, and redacted examples or
+manifests. Do not use `tools/` as the default destination for generated product
+output, selected-run artifacts, uploaded site contents, screenshots, raw
+exports, build bundles, downloaded datasets, or one-off work results. Document
+the project's output, evidence, data, build, release, or docs-asset locations
+instead.
 
 General project documentation lives in `README.md`, `docs/`, and the runbook.
 Keep overview, visible functionality, stack, commands, operations, and

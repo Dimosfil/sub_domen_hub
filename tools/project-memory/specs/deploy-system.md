@@ -33,10 +33,13 @@ to shared hosting.
   account. Keep the exact private path in ignored `sftp.local.json`; ISPmanager
   and hosting maps may still use `/www/...` shorthand.
 - Project deploy targets are mapped in `tools/deploy/hosting-projects.json`.
+- The default deploy mode is `subdomain`; external agents should pass `-Project`
+  and may omit `-DeployMode` for projects marked `subdomain-active`.
 - `legacy` mode uploads to folders under `/www/unity-constructor.site`.
 - `subdomain` mode uploads to separate roots under
   `/www/<subdomain>.unity-constructor.site`.
-- `unityconstructor` remains legacy-only by user decision.
+- `unityconstructor` remains legacy-only by user decision and requires
+  `-DeployMode legacy`.
 - The root hub page source lives in `sites/root-hub/index.html` and is
   published to `/www/unity-constructor.site/index.html`.
 - `tools/deploy/ispmanager-file-edit.mjs` can upload UTF-8 text files through

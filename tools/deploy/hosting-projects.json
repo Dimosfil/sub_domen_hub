@@ -2,7 +2,7 @@
   "baseDomain": "unity-constructor.site",
   "legacyRoot": "/www/unity-constructor.site",
   "subdomainRootTemplate": "/www/{host}",
-  "defaultMode": "legacy",
+  "defaultMode": "subdomain",
   "projects": [
     {
       "id": "ai-automation-studio",

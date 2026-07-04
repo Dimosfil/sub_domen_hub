@@ -68,6 +68,8 @@ gi info
 ги инфо
 gi stack
 ги стек
+gi build
+gi собрать
 gi rebuild
 gi tools rebuild
 gi rag rebuild
@@ -85,6 +87,8 @@ gi refactor
 gi рефактор
 ги рефактор
 gi full refactor
+ги билд
+ги собрать
 ги ребилд
 ги тулс ребилд
 ги раг ребилд
@@ -107,9 +111,13 @@ gi prod
 gi production
 gi прод
 ги прод
+gi deploy <method-or-path>
+ги деплой <способ-или-путь>
 gi ftp config
+gi ftp <deploy-hub-path>
 gi ftp
 ги фтп конфиг
+ги фтп <путь-к-deploy-хабу>
 ги фтп
 ги конфиг сервис on
 ги конфиг сервис off
@@ -192,7 +200,7 @@ the listed commands.
 | `gi vector` | Inspect semantic/vector retrieval readiness and metrics. |
 | `gi info`, `ги инфо` | Find or build the current project's purpose, visible functionality, and stack overview. |
 | `gi stack`, `ги стек` | Find or build the current project's verified technology stack inventory. |
-| `gi rebuild`, `ги ребилд` | Rebuild the current project/application only, such as producing a build artifact or exe. |
+| `gi build`, `gi собрать`, `ги билд`, `ги собрать`, `gi rebuild`, `ги ребилд` | Build/rebuild the current project/application only, producing a release/upload-ready artifact such as a static `dist/`, package, executable, or other documented build output. |
 | `gi tools rebuild`, `gi rag rebuild`, `ги тулс ребилд`, `ги раг ребилд` | Rebuild the full configured GI/project-memory/RAG system after confirmation. |
 | `gi tools rebuild sql`, `gi rag rebuild sql` | Rebuild only the SQL/FTS structured-memory node. |
 | `gi tools rebuild chunks`, `gi rag rebuild chunks` | Rebuild only semantic chunk exports. |
@@ -211,6 +219,7 @@ the listed commands.
 | `gi install`, `gi инсталл`, `ги инсталл` | Build/package the current project and verify an installer artifact; default target is Windows unless another platform is named. |
 | `gi ftp config`, `gi ftp service`, `gi ftp folder` | Inspect or configure FTP/SFTP deployment settings without uploading. |
 | `gi ftp`, `gi ftp push`, `gi deploy ftp`, `gi upload ftp` | Upload configured build output to the configured FTP/SFTP target. |
+| `gi deploy <method-or-path>`, `ги деплой <способ-или-путь>`, `gi ftp <deploy-hub-path>`, `ги фтп <путь-к-deploy-хабу>` | Deploy the current project/site through the named method, saved deploy gateway, or user-provided deploy hub path. |
 | `gi tm`, `gi manager` | Inspect the configured task manager through config-service. |
 | `gi manager test`, `gi tm test` | Test the configured task manager contract and operations. |
 | `gi active task`, `gi next task`, `gi get task` | Get executable work from the configured task manager. |
@@ -405,23 +414,34 @@ dependencies, start services, rebuild indexes, call external APIs, read secrets,
 or inspect private paths outside the project root unless the user explicitly
 approves that scope.
 
-### Rebuild Project
+### Build/Rebuild Project
 
 ```text
+gi build
+gi собрать
+ги билд
+ги собрать
 gi rebuild
 ги ребилд
 ```
 
-`gi rebuild` asks the agent to rebuild the current project/application build
-output, such as an executable, package, or other
-documented artifact. The agent reads project-local build or rebuild
-instructions, manifests, scripts, and packaging metadata before running the
-documented command.
+`gi build` / `gi собрать` / `ги билд` / `ги собрать` / `gi rebuild` asks the
+agent to build or rebuild the current project/application output. This is the
+pre-release distributable intended for upload, hosting, or server publication
+when the project defines such an artifact, such as a static `dist/`, bundle,
+package, executable, or other documented build output. The agent reads
+project-local build or rebuild instructions, manifests, scripts, hosting base
+path/public-path config, and packaging metadata before running the documented
+command.
 
 This command does not mean dependency restore, tests-only verification, a
 RAG-only rebuild, or a combined project-plus-RAG rebuild. It does not rebuild
-GI/RAG indexes or tools. If no project rebuild contract exists, the agent asks
-one short clarification question instead of inventing a command. Use
+GI/RAG indexes or tools, perform FTP/SFTP upload, publish to a production
+folder, or produce an installer unless the project-local build contract
+explicitly makes that part of the build artifact. If no project build/rebuild
+contract exists, the agent asks one short clarification question instead of
+inventing a command. Use `gi ftp` for upload, `gi prod` for documented
+production publication, `gi install` for installer packaging, and
 `gi tools rebuild` or `gi rag rebuild` when the GI/RAG layer itself must be
 rebuilt.
 
@@ -1187,15 +1207,19 @@ gi prod
 gi production
 gi прод
 ги прод
+gi deploy <method-or-path>
+ги деплой <способ-или-путь>
 gi ftp config
 gi ftp service
 gi ftp folder
 gi ftp push
+gi ftp <deploy-hub-path>
 gi ftp
 ги фтп конфиг
 ги фтп сервис
 ги фтп папка
 ги фтп пуш
+ги фтп <путь-к-deploy-хабу>
 ги фтп
 gi upload ftp
 gi deploy ftp
@@ -1228,12 +1252,55 @@ include/exclude rules, restart/switchover command, health check, or rollback
 path is undocumented, ask one concise clarification question instead of
 guessing. Follow `patterns/PROJECT_DEV_PROD_SERVICES.md`.
 
+`gi deploy <method-or-path>` / `ги деплой <способ-или-путь>` deploys the current
+project or site through the explicitly named method, service, saved deploy
+gateway, or deploy hub path. If the argument is an absolute or clearly
+project-local path, treat that directory as a user-authorized external deploy
+gateway and record it as the current project's selected deploy gateway in an
+ignored local file such as `tools/deploy/deploy-gateway.local.json`. Future
+short commands such as `gi deploy`, `ги деплой`, `gi ftp`, or `ги фтп` should
+reuse the saved gateway when no method or path is supplied. Store only local
+selection metadata there, such as gateway path, entrypoint, source-path
+parameter, project id, deploy mode, and target name; keep credentials and
+private remote paths in the gateway's own ignored config or secret store.
+Before touching the gateway, read its own `AGENTS.md`, `COMMANDS.md`, and
+documented deploy runbook such as `docs/deploy.md` when present. Prefer a
+single documented gateway entrypoint such as `tools/deploy/deploy.ps1`; pass the
+current project root as `-SourcePath` or the gateway's documented equivalent,
+and pass project id, deployment mode, or target name only when the gateway
+contract defines them. Do not infer credentials, print secrets, edit the
+gateway's private local config, or run arbitrary helper commands from that
+directory. If no argument is supplied and no selected gateway exists, stop and
+ask the user to make the full first call, for example
+`gi deploy <method-or-path>` / `ги деплой <способ-или-путь>`. Do not reinterpret
+a bare first `gi deploy` as `gi prod`, direct FTP upload, a build, or another
+deployment workflow. If the gateway contract, required entrypoint, source-path
+parameter, target project mapping, or deploy mode is missing, ask one concise
+clarification question instead of guessing.
+
+If the user's task is to prepare or repair the deploy gateway itself, work in
+that gateway project and create or update the reusable deploy contract there:
+`AGENTS.md`, `COMMANDS.md`, a deploy runbook such as `docs/deploy.md`, one
+documented entrypoint such as `tools/deploy/deploy.ps1`, redacted config
+examples, and verification/rollback notes. Keep real secrets and private target
+paths in the gateway's ignored local config or secret store, not in shared
+instructions or consuming projects.
+
+`gi ftp <deploy-hub-path>` / `ги фтп <путь-к-deploy-хабу>` is the FTP/SFTP
+variant of the same gateway flow: the current project is the upload source, and
+the path names the deploy gateway that owns FTP/SFTP configuration, destination
+selection, and secret references. Record that gateway as the current project's
+selected deploy gateway, then use the gateway entrypoint and pass the current
+project root as the source. Later `gi ftp` / `ги фтп` without a path should use
+the saved gateway. Do not bypass the gateway by reading or rewriting its private
+local JSON files except as its own instructions explicitly allow.
+
 `gi ftp config` / `ги фтп конфиг` creates, inspects, or updates the current
-project's FTP/SFTP config without uploading. Use separate project-local ignored
-files such as `tools/deploy/sftp.local.json` or `tools/deploy/ftp.local.json`.
-Prefer secrets through environment variables or private keys; do not commit real
-hostnames, usernames, passwords, tokens, private keys, or private remote paths
-unless project policy explicitly marks them non-secret.
+project's FTP/SFTP config without uploading. Use a separate project-local file:
+`tools/deploy/ftp.local.json`. Prefer secrets through environment variables or
+private keys; do not commit real hostnames, usernames, passwords, tokens,
+private keys, or private remote paths unless project policy explicitly marks
+them non-secret.
 
 `gi ftp service` / `ги фтп сервис` manually registers, inspects, or selects an
 FTP/FTPS/SFTP service record in config-service without uploading. When a project
@@ -1252,13 +1319,22 @@ path and saves it in `tools/deploy/ftp.local.json`.
 
 `gi ftp push` / `ги фтп пуш` is the explicit upload command. `gi ftp` /
 `ги фтп` remains a shorter alias. The agent first reads project-local deploy
-instructions. If `tools/deploy/deploy.ps1` exists, run it as the single
-entrypoint; it selects SFTP, FTPS, or FTP from local config, builds the
-configured source when needed, and uploads to `remotePath`. If the entrypoint is
-missing, use `tools/deploy/sftp.local.json` or `tools/deploy/ftp.local.json`
-directly. If config is missing, use the redacted template shape from
-`tools/deploy/sftp.local.example.json`, `templates/ftp.local.template.json`, or
+instructions and
+`tools/deploy/ftp.local.json`, builds the configured `localPath` when needed,
+then uploads to `remotePath`. If the config is missing, use the redacted
+template shape from `templates/ftp.local.template.json` or
 `tools/deploy/ftp.local.example.json` and ask only for missing required values.
+Treat upload stalls, hangs, repeated timeouts, and failed stream opens as failed
+FTP/FTPS transfers. If FTP/FTPS connects but upload fails or is unreliable,
+immediately inspect the service contract, project-local config, and current
+user-provided details for an authorized SFTP-over-SSH route to the same remote
+deploy folder. When the needed SSH host, port, user, and credential reference
+are available, switch to SFTP before more FTP/FTPS upload variants and report
+that fallback. If they are missing, report the exact missing SFTP details
+instead of inventing credentials or retrying the same failing FTP path. Do not
+disable TLS certificate validation or accept invalid FTPS certificates as a
+routine fallback unless the deploy contract or current user message explicitly
+authorizes that degraded security path.
 Do not print secrets or full credential-bearing commands.
 
 `gi config service on` / `gi config service off` sets the current application's

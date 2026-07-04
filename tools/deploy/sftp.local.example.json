@@ -9,7 +9,7 @@
     "outputPath": "."
   },
   "projectMapPath": "hosting-projects.json",
-  "deployMode": "legacy",
+  "deployMode": "subdomain",
   "target": {
     "protocol": "sftp",
     "hostEnv": "SUB_DOMEN_HUB_SFTP_HOST",

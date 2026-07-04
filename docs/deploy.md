@@ -68,8 +68,11 @@ The hosting currently supports two deploy modes:
   `/www/<subdomain>.unity-constructor.site`.
 
 Known project targets are stored in `tools/deploy/hosting-projects.json`.
-`unityconstructor` stays legacy-only. Shared folders such as `assets` and
-`uploads` are not promoted to subdomains.
+The default deploy mode is `subdomain`; external agents should pass `-Project`
+and may omit `-DeployMode` for projects marked `subdomain-active`.
+`unityconstructor` stays legacy-only and must be deployed with
+`-DeployMode legacy`. Shared folders such as `assets` and `uploads` are not
+promoted to subdomains.
 
 ## Commands
 
@@ -91,16 +94,16 @@ Deploy a local folder:
 .\tools\deploy\deploy.ps1 -SourcePath D:\path\to\source
 ```
 
-Deploy a mapped project to its current folder-based path:
+Deploy a mapped project to its default subdomain path:
+
+```powershell
+.\tools\deploy\deploy.ps1 -Project webassist
+```
+
+Deploy a mapped project to its legacy folder path:
 
 ```powershell
 .\tools\deploy\deploy.ps1 -Project webassist -DeployMode legacy
-```
-
-Deploy a mapped project to its subdomain path:
-
-```powershell
-.\tools\deploy\deploy.ps1 -Project webassist -DeployMode subdomain
 ```
 
 Deploy a git repository:
@@ -118,7 +121,7 @@ Override the build command or output folder for one run:
 Deploy a mapped hosting project through the current config:
 
 ```powershell
-.\tools\deploy\deploy.ps1 -Project webassist -DeployMode subdomain
+.\tools\deploy\deploy.ps1 -Project webassist
 ```
 
 ## Safety

@@ -8,6 +8,13 @@
 - When another project reveals a reusable improvement to shared instructions,
   write a dated recommendation to this repository's `updates/` folder if it is
   available.
+- When the user reports an agent-rule failure, repeated behavior bug, or asks to
+  keep a log of such bugs, append a compact entry to
+  `updates/USER_REPORTED_AGENT_BUG_LOG.md` in this repository when available.
+  Create the file if missing. Record the date, symptom, likely violated rule or
+  rule gap, evidence summary, privacy review, status, and any accepted
+  migration or follow-up. Keep the log maintenance-only and do not require
+  consuming projects to read it during startup.
 - If this repository is unavailable, use a project-local intake folder such as
   `tools/instruction-updates/` or `tools/project-memory/instruction-updates/`
   with the same dated filename pattern.

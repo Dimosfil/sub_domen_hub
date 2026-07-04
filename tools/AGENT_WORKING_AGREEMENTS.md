@@ -250,8 +250,11 @@ or:
   development work such as new behavior, validation, observability,
   integrations, runtime flows, or new public contracts; label verification and
   service operations separately too.
-- Use `gi rebuild` for the current project/application rebuild only, such as
-  producing an executable, package, or documented build artifact. Use
+- Use `gi build`, `gi собрать`, `ги билд`, `ги собрать`, and `gi rebuild` for
+  the current project/application build or rebuild only, such as producing a
+  release/upload-ready `dist/`, executable, package, or documented build
+  artifact. These commands do not upload, publish to production, or produce an
+  installer unless the project-local build contract explicitly says so. Use
   `gi tools rebuild` /
   `gi rag rebuild` only for a confirmed full rebuild of the current project's
   configured GI/RAG project-memory retrieval system. Use node forms such as
