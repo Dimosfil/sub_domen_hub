@@ -40,8 +40,16 @@ to shared hosting.
   `/www/<subdomain>.unity-constructor.site`.
 - `unityconstructor` remains legacy-only by user decision and requires
   `-DeployMode legacy`.
-- The root hub page source lives in `sites/root-hub/index.html` and is
-  published to `/www/unity-constructor.site/index.html`.
+- The editable root hub website now lives in `D:\AI\ai-automation-studio\`.
+  Its active source file is `D:\AI\ai-automation-studio\index.html`, and its
+  built `dist` is published to `/www/unity-constructor.site/`.
+- The root hub project-card workflow is documented in
+  `docs/root-hub-project-cards.md`. New public projects deployed through
+  `gi ftp` should leave pending card records in
+  `docs/root-hub-project-card-inbox.md`. When the user asks to update the public
+  hub, apply approved inbox records to `D:\AI\ai-automation-studio\index.html`,
+  build `D:\AI\ai-automation-studio`, and publish that build through the deploy
+  gateway. Keep `tools/deploy/hosting-projects.json` as the deploy target map.
 - `tools/deploy/ispmanager-file-edit.mjs` can upload UTF-8 text files through
   ISPmanager `file.edit` with readback verification.
 

@@ -4,6 +4,18 @@
   as no-ops unless they include an explicit task, path, command, error, or
   project question. Do not run startup restore or read project files for those
   messages; reply briefly and ask what the user wants to do next.
+- On the first concrete task in a new chat/session, before task-specific
+  startup restore, planning, implementation, or command execution, perform a
+  quiet GI instruction update check. Use the current project's
+  `tools/project-memory/instruction-kit.json` when present, resolve the accepted
+  shared-instruction source, and read only `VERSION.md`, `CHANGELOG.md`,
+  `INDEX.md`, and pending files under `migrations/`. Apply pending accepted
+  migrations when the local update contract allows it; otherwise report the
+  compact blocker and continue with current local instructions unless the user
+  explicitly requested `gi обновить`. Do not read `updates/`, old chat examples,
+  broad project files, or unrelated source repositories for this startup check.
+  Keep the user-facing output to one compact status line or include it in the
+  first substantive reply.
 - For each new project session, require a clear, measurable project goal before
   implementation begins.
   - If no explicit project goal exists in startup artifacts or user text,

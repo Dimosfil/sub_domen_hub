@@ -161,6 +161,11 @@ document root. The helper also requests a Let's Encrypt certificate unless
 The root site `https://unity-constructor.site/` is a static hub page with links
 to both legacy folder URLs and prepared subdomain URLs. Publish it with:
 
+Before adding, removing, or changing project cards, read
+`docs/root-hub-project-cards.md`. `tools/deploy/hosting-projects.json` controls
+`gi ftp` upload targets, but the visible cards in `sites/root-hub/index.html`
+are currently maintained by hand and must be kept synchronized with that map.
+
 ```powershell
 $env:SUB_DOMEN_HUB_PANEL_USER = "..."
 $env:SUB_DOMEN_HUB_PANEL_PASSWORD = "..."

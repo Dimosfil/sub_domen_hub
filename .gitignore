@@ -7,10 +7,12 @@ tools/project-memory/vector-index/
 tools/project-memory/chroma/
 tools/project-memory/embedding-cache/
 tools/project-memory/semantic-corpus*.jsonl
+tools/project-memory/devops.local.json
 tools/summary/*.tmp
 tools/deploy/ftp.local.json
 tools/deploy/sftp.local.json
 tools/deploy/deploy-gateway.local.json
 tools/deploy/node_modules/
 tools/deploy/prod.local.json
+sites.7z
 *.log

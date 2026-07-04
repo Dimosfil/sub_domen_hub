@@ -28,6 +28,11 @@ implemented against each goal criterion and list remaining gaps as blockers.
 - Read only the modules needed for the current request.
 - Before acting on a concrete task, select and read the matching module(s);
   this entrypoint alone is enough only for greetings or status-neutral replies.
+- On the first concrete task in a new chat/session, before task-specific work,
+  run a quiet GI update check: read local instruction-kit metadata and accepted
+  source `VERSION.md`/`migrations/`, apply pending accepted migrations when the
+  project update contract allows it, and report only a compact result or
+  blocker. Do not read `updates/` for this startup check.
 - If the request contains a GI chat command such as `gi ...`, `ги ...`, or a
   known mojibake form such as `РіРё ...`, treat it as a concrete task even when
   the message is short. First read `COMMANDS.md` when present, then read every
@@ -132,6 +137,21 @@ instead.
 General project documentation lives in `README.md`, `docs/`, and the runbook.
 Keep overview, visible functionality, stack, commands, operations, and
 troubleshooting there.
+
+## Root Hub Cards
+
+When adding, removing, or changing a project deployed through `gi ftp` /
+`tools/deploy/deploy.ps1`, read `docs/root-hub-project-cards.md` first.
+`sub_domen_hub` is the deploy gateway and target registry; the editable public
+hub website lives in `D:\AI\ai-automation-studio\`.
+
+New public subdomain projects should leave a structured pending record in
+`docs/root-hub-project-card-inbox.md`. Do not edit or publish
+`D:\AI\ai-automation-studio\` from a background/new-project deploy unless the
+user explicitly asks to update the public hub. When the user asks to update the
+hub, apply approved inbox records to `D:\AI\ai-automation-studio\index.html`,
+build that project, and deploy its `dist` through the configured `gi ftp`
+gateway.
 
 ## Common Commands
 

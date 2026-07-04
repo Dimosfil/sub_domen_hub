@@ -80,6 +80,7 @@ site and are less explicit for agent-operated deploys.
   - `ai-automation-studio.unity-constructor.site`
   - `api.unity-constructor.site`
   - `test-site-usmanova.unity-constructor.site`
+  - `teiko.unity-constructor.site`
   - `webassist.unity-constructor.site`
   - `web-assist.unity-constructor.site`
   - `work-search.unity-constructor.site`
@@ -93,6 +94,7 @@ Created and verified on 2026-07-04:
 - `api.unity-constructor.site` -> `/www/api.unity-constructor.site`
 - `test-site-usmanova.unity-constructor.site` ->
   `/www/test-site-usmanova.unity-constructor.site`
+- `teiko.unity-constructor.site` -> `/www/teiko.unity-constructor.site`
 - `webassist.unity-constructor.site` ->
   `/www/webassist.unity-constructor.site`
 - `web-assist.unity-constructor.site` ->
@@ -100,7 +102,6 @@ Created and verified on 2026-07-04:
 - `work-search.unity-constructor.site` ->
   `/www/work-search.unity-constructor.site`
 
-Each created subdomain has A, AAAA, `www` A, and `www` AAAA records in the
-`unity-constructor.site` DNS zone. Each created subdomain has an active Let's
-Encrypt certificate valid until 2026-10-02 and returned HTTPS 200 during
-verification.
+Each created subdomain has DNS records in the `unity-constructor.site` DNS zone.
+Each created subdomain has an active Let's Encrypt certificate valid until
+2026-10-02 and returned HTTPS 200 during verification.

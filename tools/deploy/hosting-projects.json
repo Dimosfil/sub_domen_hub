@@ -26,6 +26,13 @@
       "status": "subdomain-active"
     },
     {
+      "id": "teiko",
+      "legacyPath": "/www/unity-constructor.site/teiko",
+      "subdomain": "teiko.unity-constructor.site",
+      "subdomainPath": "/www/teiko.unity-constructor.site",
+      "status": "subdomain-active"
+    },
+    {
       "id": "webassist",
       "legacyPath": "/www/unity-constructor.site/webassist",
       "subdomain": "webassist.unity-constructor.site",

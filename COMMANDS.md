@@ -36,6 +36,10 @@ exact external path and action.
 gi help
 ги хелп
 gi commands
+gi ошибка
+ги ошибка
+gi ошибка фикс
+ги ошибка фикс
 ги команды
 gi обновись
 gi init https://github.com/Dimosfil/general-instructions.git
@@ -187,6 +191,8 @@ the listed commands.
 
 | Command | Description |
 | --- | --- |
+| `gi ошибка`, `ги ошибка`, `gi error` | Capture evidence for a suspected GI rule bug without fixing rules yet. |
+| `gi ошибка фикс`, `ги ошибка фикс`, `gi error fix` | Repair the logged or supplied GI rule bug in the shared instructions. |
 | `gi help`, `ги хелп`, `gi commands`, `ги команды` | Show the local GI command list with short descriptions. |
 | `gi обновить`, `gi обновись` | Apply accepted instruction-kit updates and migrations. |
 | `gi init <source>`, `инит <source>`, `инит правила <source>` | Bootstrap or restore shared instructions from `general-instructions`. |
@@ -254,6 +260,14 @@ the listed commands.
 только как источник `VERSION.md`, `CHANGELOG.md`, `INDEX.md`, `migrations/` и
 шаблонов. Отсутствие `.git` не блокирует проверку/применение GI-обновлений,
 только commit/push.
+На первом конкретном сообщении нового чата/сессии агент перед основной работой
+тихо выполняет проверку `gi обновить`: читает локальную metadata instruction kit
+и accepted source `VERSION.md`/`migrations/`, применяет pending accepted
+migrations по локальному update contract, и сообщает только короткий статус или
+blocker. Эта авто-проверка не читает `updates/`, старые chat examples, широкие
+деревья файлов или чужие проекты. Если source недоступен, агент кратко сообщает
+blocker и продолжает по текущим локальным правилам, кроме явной команды
+`gi обновить`.
 
 `apps.txt`, планы, summary и записи task manager не дают разрешение читать
 приватные локальные источники вне project root. Для анализаторов логов агент
@@ -274,6 +288,36 @@ repository с настроенным remote и изменения касаютс
 Команда не является просьбой пушить уже существующие локальные коммиты, синкать
 feature branch, продолжать старый план или делать общее Git-обслуживание. Без
 remote, при конфликте или unrelated changes — остановиться и объяснить блокер.
+
+### GI Rule Error Intake And Fix
+
+```text
+gi ошибка
+ги ошибка
+gi error
+gi ошибка фикс
+ги ошибка фикс
+gi error fix
+```
+
+`gi ошибка` / `ги ошибка` - команда intake для логической ошибки правил GI,
+повторяющегося сбоя поведения агента или подозрения на rule gap. Агент собирает
+только уже доступные доказательства: текст текущего чата, прикрепленные
+скриншоты/файлы, видимый tool output и явно разрешенные локальные пути. Затем
+делает privacy review, кратко формулирует symptom, likely violated rule or gap,
+evidence summary и status, и записывает это в
+`updates/USER_REPORTED_AGENT_BUG_LOG.md` shared library, если она доступна. Если
+shared library недоступна, использует project-local intake folder such as
+`tools/instruction-updates/`. Эта команда не чинит правила, не читает чужие
+проекты и не запускает широкие поиски.
+
+`gi ошибка фикс` / `ги ошибка фикс` - команда на ремонт. Агент читает newest
+relevant unresolved bug-log entry и текущие доказательства, выделяет переносимый
+rule gap, обновляет live rules, copied-project templates, accepted migration,
+`VERSION.md` и `CHANGELOG.md`, проверяет scoped change, затем закрывает или
+обновляет bug-log entry с migration/follow-up. В shared rules и migrations нельзя
+переносить secrets, private screenshots, raw logs, private project data или
+проектно-специфичные детали.
 
 ### Новый Проект
 
@@ -1294,6 +1338,42 @@ selected deploy gateway, then use the gateway entrypoint and pass the current
 project root as the source. Later `gi ftp` / `ги фтп` without a path should use
 the saved gateway. Do not bypass the gateway by reading or rewriting its private
 local JSON files except as its own instructions explicitly allow.
+
+When the deploy gateway supports automatic project registration, an unmapped
+current project uses its root folder name as the default project id. The gateway
+derives the remote destination from its documented naming convention, records or
+updates the project in its deploy registry, and leaves non-secret metadata for
+later hub/card/index updates. Unless the gateway contract explicitly names an
+existing target hostname, the public target must be project-scoped, normally
+from the sanitized project id under the configured base domain; the agent must
+not target the apex/root domain, shared hub hostname, or another project's
+hostname for an unmapped project. The project agent should not ask the user to
+pick a remote folder when the gateway contract defines deterministic registration.
+Before reporting an unknown deploy project or missing target mapping, the agent
+checks the gateway registry and any documented project inbox, pending queue,
+hub-card queue, or domain/hosting request list. A pending or errored inbox entry
+is the active deploy state. For a pending entry, the agent refreshes allowed
+non-secret metadata, uploads the artifact to the gateway's documented
+pending/staging/handoff target when one exists, and reports that devops/hosting
+publication is still pending instead of creating a duplicate mapping or
+uploading to the gateway root. For an errored entry or rejected request, the
+agent first checks whether the evidence is fresh from the current attempt or
+stale/indirect, such as an old inbox status, cached host-limit check, screenshot,
+or external quota/provisioning claim. Stale evidence warns that provisioning may
+fail, then the agent runs the gateway's documented safe create, refresh, or
+provisioning attempt when available. It stops only when the current attempt
+returns an explicit rejection or the gateway has no documented attempt/refresh
+path. If the gateway has a documented new-domain/request workflow, create or
+refresh that request before deciding whether to continue artifact upload or
+return an explicit error.
+If registration, provisioning, or artifact selection cannot continue, the agent
+does not report a vague blocker. A pending domain/hosting request should still
+upload to the gateway's documented pending/staging/handoff target when
+available. Otherwise the agent returns an explicit deploy error with the failed
+step, evidence, responsible system or owner, next required action, and the
+artifact/source state already recorded. It must not fall back to a root/default
+remote path, apex/root domain, shared hub hostname, another project's hostname,
+or upload the whole repository.
 
 `gi ftp config` / `ги фтп конфиг` creates, inspects, or updates the current
 project's FTP/SFTP config without uploading. Use a separate project-local file:
