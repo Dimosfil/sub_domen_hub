@@ -7,9 +7,13 @@ behavior as the full instruction kit.
 
 ## Project
 
-Project `sub_domen_hub` is newly initialized. Fill in purpose, users, and primary runtime/product surface when the project goal is defined.
+Project `sub_domen_hub` is the deployment gateway and hosting-target registry for projects published to `unity-constructor.site`, its subdomains, and supported legacy paths.
+
+Primary users are repository maintainers, deployment operators, and AI agents that publish mapped projects. The main runtime surface is the PowerShell entrypoint `tools/deploy/deploy.ps1`; target definitions live in `tools/deploy/hosting-projects.json`, and operator documentation starts at `docs/USER_GUIDE.md` and `docs/deploy.md`.
 
 ## Project Goal
+
+Provide a safe, repeatable deployment workflow that selects an explicit project or source, builds it when required, previews the resolved upload with `-DryRun`, and publishes only to the configured hosting target without committing credentials or silently changing the public root hub.
 
 Before implementation starts on a new project session, confirm a clear,
 measurable project goal. If no goal is present in local instructions, project
